@@ -1,0 +1,33 @@
+.card-feature {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 1.2rem; 
+	background-color: #ffffff;
+	border-radius: 1rem;
+	padding: 2rem;
+	flex: 1;
+	min-width: 22rem; 
+}
+
+.card-feature i {
+	font-size: 2.7rem;
+	color: var(--primary-color);
+}
+
+.feature-content {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.feature-content span {
+	font-weight: 700;
+	font-size: 1.2rem;
+	color: var(--dark-color);
+}
+
+.feature-content p {
+	color: #777;
+	font-weight: 500;
+}
