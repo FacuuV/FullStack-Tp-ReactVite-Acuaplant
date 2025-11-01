@@ -36,6 +36,7 @@ const products = [
 		description: 'Especie atractiva y de comportamiento interesante. Ideal para acuarios comunitarios.',
 	},
 ];
+
 const ProductCard = ({ product }) => (
 	<div className='card-product'>
 		<div className='container-img'>
@@ -66,18 +67,44 @@ const ProductCard = ({ product }) => (
 	</div>
 );
 const ProductsSection = () => {
+	const [allProducts, setAllProducts] = useState([]); // Guarda todos los productos del backend
 	const [activeFilter, setActiveFilter] = useState('Destacados');
 	const [filteredProducts, setFilteredProducts] = useState(products);
+	const [filteredProducts, setFilteredProducts] = useState([]); // Guarda los productos a mostrar
 
 	const filterOptions = ['Destacados', 'Más recientes', 'Mejores Valorados'];
 
+	// --- ¡LA PARTE NUEVA! ---
+	// Este efecto se ejecuta una sola vez para obtener los datos del backend
 	useEffect(() => {
 		let sortedProducts = [...products];
+		const fetchProducts = async () => {
+			try {
+				// Hacemos la llamada a la ruta pública de nuestro backend
+				const response = await fetch('http://localhost:5000/api/products');
+				if (!response.ok) {
+					throw new Error('La respuesta de la red no fue ok');
+				}
+				const responseData = await response.json();
+				setAllProducts(responseData.data); // Guardamos los productos del backend
+				setFilteredProducts(responseData.data); // Inicialmente mostramos todos
+			} catch (error) {
+				console.error("Error al obtener los productos:", error);
+			}
+		};
+
+		fetchProducts();
+	}, []); // El array vacío asegura que se ejecute solo una vez
+
+	// Este efecto se ejecuta cada vez que cambia el filtro
+	useEffect(() => {
+		let sortedProducts = [...allProducts];
 
 		switch (activeFilter) {
 			case 'Más recientes':
 				const recentOrder = ['Pez Blue parrot', 'Pez Corydora', 'Pez Gurami', 'Pez Guppy'];
 				sortedProducts.sort((a, b) => recentOrder.indexOf(a.name) - recentOrder.indexOf(b.name));
+				sortedProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 				break;
 			case 'Mejores Valorados':
 				sortedProducts.sort((a, b) => b.rating - a.rating);
@@ -90,6 +117,7 @@ const ProductsSection = () => {
 
 		setFilteredProducts(sortedProducts);
 	}, [activeFilter]);
+	}, [activeFilter, allProducts]);
 
 	return (
 		<section className='container top-products'>
@@ -108,6 +136,18 @@ const ProductsSection = () => {
 			<div className='container-products'>
 				{filteredProducts.map(product => (
 					<ProductCard key={product.name} product={product} />
+					// Adaptamos los datos del backend a lo que espera ProductCard
+					<ProductCard key={product._id} product={{
+						name: product.nombre,
+						description: product.descripcion,
+						price: product.precio,
+						// --- Datos que aún no tenemos en el backend ---
+						// Por ahora, usamos valores fijos o los omitimos
+						image: pezGuppyImg, // Placeholder
+						rating: product.categoria.nombre === 'Destacados' ? 5 : 4, // Ejemplo
+						oldPrice: null,
+						discount: null,
+					}} />
 				))}
 			</div>
 		</section>
