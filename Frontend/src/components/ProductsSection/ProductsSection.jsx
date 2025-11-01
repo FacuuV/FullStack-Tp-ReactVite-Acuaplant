@@ -4,38 +4,6 @@ import pezGuppyImg from '../../assets/pezguppy.jpg';
 import blueParrotImg from '../../assets/blueparrot.jpg';
 import pezCorydoraImg from '../../assets/pezcorydora.jpg';
 import pezGuramiImg from '../../assets/pez-gurami.jpg';
-const products = [
-	{
-		name: 'Pez Guppy',
-		image: pezGuppyImg,
-		rating: 5,
-		price: 4000,
-		description: 'Pez vivíparo, pequeño y muy fácil de cuidar. Ideal para principiantes.',
-	},
-	{
-		name: 'Pez Blue parrot',
-		image: blueParrotImg,
-		rating: 2,
-		price: 6500,
-		oldPrice: 8500,
-		discount: 10,
-		description: 'Pez híbrido y robusto con una personalidad única. Requiere un acuario espacioso.',
-	},
-	{
-		name: 'Pez Corydora',
-		image: pezCorydoraImg,
-		rating: 5,
-		price: 1200,
-		description: 'Pez de fondo, pacífico y gregario. Ayuda a mantener limpio el sustrato.',
-	},
-	{
-		name: 'Pez Gurami',
-		image: pezGuramiImg,
-		rating: 4,
-		price: 5000,
-		description: 'Especie atractiva y de comportamiento interesante. Ideal para acuarios comunitarios.',
-	},
-];
 
 const ProductCard = ({ product }) => (
 	<div className='card-product'>
@@ -69,7 +37,6 @@ const ProductCard = ({ product }) => (
 const ProductsSection = () => {
 	const [allProducts, setAllProducts] = useState([]); // Guarda todos los productos del backend
 	const [activeFilter, setActiveFilter] = useState('Destacados');
-	const [filteredProducts, setFilteredProducts] = useState(products);
 	const [filteredProducts, setFilteredProducts] = useState([]); // Guarda los productos a mostrar
 
 	const filterOptions = ['Destacados', 'Más recientes', 'Mejores Valorados'];
@@ -77,7 +44,6 @@ const ProductsSection = () => {
 	// --- ¡LA PARTE NUEVA! ---
 	// Este efecto se ejecuta una sola vez para obtener los datos del backend
 	useEffect(() => {
-		let sortedProducts = [...products];
 		const fetchProducts = async () => {
 			try {
 				// Hacemos la llamada a la ruta pública de nuestro backend
@@ -102,21 +68,11 @@ const ProductsSection = () => {
 
 		switch (activeFilter) {
 			case 'Más recientes':
-				const recentOrder = ['Pez Blue parrot', 'Pez Corydora', 'Pez Gurami', 'Pez Guppy'];
-				sortedProducts.sort((a, b) => recentOrder.indexOf(a.name) - recentOrder.indexOf(b.name));
 				sortedProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-				break;
-			case 'Mejores Valorados':
-				sortedProducts.sort((a, b) => b.rating - a.rating);
-				break;
-			case 'Destacados':
-			default:
-				sortedProducts = [...products];
 				break;
 		}
 
 		setFilteredProducts(sortedProducts);
-	}, [activeFilter]);
 	}, [activeFilter, allProducts]);
 
 	return (
@@ -135,7 +91,6 @@ const ProductsSection = () => {
 			</div>
 			<div className='container-products'>
 				{filteredProducts.map(product => (
-					<ProductCard key={product.name} product={product} />
 					// Adaptamos los datos del backend a lo que espera ProductCard
 					<ProductCard key={product._id} product={{
 						name: product.nombre,
