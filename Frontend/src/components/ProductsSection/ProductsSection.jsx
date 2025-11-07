@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ProductsSection.css';
+import { useCart } from '../../context/CartContext'; // 1. Importamos el hook del carrito
 import pezGuppyImg from '../../assets/pezguppy.jpg';
 import blueParrotImg from '../../assets/blueparrot.jpg';
 import pezCorydoraImg from '../../assets/pezcorydora.jpg';
@@ -8,6 +9,7 @@ import pezGuramiImg from '../../assets/pez-gurami.jpg';
 const products = [
 	{
 		name: 'Pez Guppy',
+		_id: 'static-1', // Añadimos un ID único para el carrito
 		image: pezGuppyImg,
 		rating: 5,
 		price: 4000,
@@ -15,6 +17,7 @@ const products = [
 	},
 	{
 		name: 'Pez Blue parrot',
+		_id: 'static-2', // Añadimos un ID único para el carrito
 		image: blueParrotImg,
 		rating: 2,
 		price: 6500,
@@ -24,6 +27,7 @@ const products = [
 	},
 	{
 		name: 'Pez Corydora',
+		_id: 'static-3', // Añadimos un ID único para el carrito
 		image: pezCorydoraImg,
 		rating: 5,
 		price: 1200,
@@ -31,6 +35,7 @@ const products = [
 	},
 	{
 		name: 'Pez Gurami',
+		_id: 'static-4', // Añadimos un ID único para el carrito
 		image: pezGuramiImg,
 		rating: 4,
 		price: 5000,
@@ -38,35 +43,42 @@ const products = [
 	},
 ];
 
-const ProductCard = ({ product }) => (
-	<div className='card-product'>
-		<div className='container-img'>
-			<img src={product.image} alt={product.name} />
-			{product.discount && <span className='discount'>-{product.discount}%</span>}
-			<div className='button-group'>
-				<span><i className='fa-regular fa-eye'></i></span>
-				<span><i className='fa-regular fa-heart'></i></span>
-				<span><i className='fa-solid fa-code-compare'></i></span>
+const ProductCard = ({ product }) => {
+	// 2. Obtenemos la función para añadir al carrito
+	const { addToCart } = useCart();
+
+	return (
+		<div className='card-product'>
+			<div className='container-img'>
+				<img src={product.image} alt={product.name} />
+				{product.discount && <span className='discount'>-{product.discount}%</span>}
+				<div className='button-group'>
+					<span><i className='fa-regular fa-eye'></i></span>
+					<span><i className='fa-regular fa-heart'></i></span>
+					<span><i className='fa-solid fa-code-compare'></i></span>
+				</div>
+			</div>
+			<div className='content-card-product'>
+				<div className='stars'>
+					{[...Array(5)].map((_, i) => (
+						<i key={i} className={i < product.rating ? 'fa-solid fa-star' : 'fa-regular fa-star'}></i>
+					))}
+				</div>
+				<h3>{product.name}</h3>
+				<p className='description'>{product.description}</p>
+				<div className='footer-card'>
+					<p className='price'>
+						${product.price.toLocaleString('es-AR')}
+						{product.oldPrice && <span>${product.oldPrice.toLocaleString('es-AR')}</span>}
+					</p>
+					{/* 3. Convertimos el span en un botón que llama a addToCart */}
+					<button onClick={() => addToCart(product)} className='add-cart'><i className='fa-solid fa-basket-shopping'></i></button>
+				</div>
 			</div>
 		</div>
-		<div className='content-card-product'>
-			<div className='stars'>
-				{[...Array(5)].map((_, i) => (
-					<i key={i} className={i < product.rating ? 'fa-solid fa-star' : 'fa-regular fa-star'}></i>
-				))}
-			</div>
-			<h3>{product.name}</h3>
-			<p className='description'>{product.description}</p>
-			<div className='footer-card'>
-				<p className='price'>
-					${product.price.toLocaleString('es-AR')}
-					{product.oldPrice && <span>${product.oldPrice.toLocaleString('es-AR')}</span>}
-				</p>
-				<span className='add-cart'><i className='fa-solid fa-basket-shopping'></i></span>
-			</div>
-		</div>
-	</div>
-);
+	);
+};
+
 const ProductsSection = () => {
 	const [activeFilter, setActiveFilter] = useState('Destacados');
 	const [filteredProducts, setFilteredProducts] = useState(products);
@@ -109,7 +121,7 @@ const ProductsSection = () => {
 			</div>
 			<div className='container-products'>
 				{filteredProducts.map(product => (
-					<ProductCard key={product.name} product={product} />
+					<ProductCard key={product._id} product={product} />
 				))}
 			</div>
 		</section>
