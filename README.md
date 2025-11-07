@@ -38,10 +38,11 @@ Almacena la información de los usuarios registrados.
   "password": "String (encriptado)",
   "timestamps": true
 }
+```
 2. products
 Almacena los productos de la tienda.
 
-json
+```json
 {
   "name": "String",
   "description": "String",
@@ -50,15 +51,17 @@ json
   "category": "ObjectId (referencia a 'categories')",
   "timestamps": true
 }
+```
 3. categories
 Almacena las categorías a las que pertenecen los productos.
 
-json
+```json
 {
   "name": "String (único)",
   "description": "String",
   "timestamps": true
 }
+```
 ⚙️ Instalación y Ejecución
 Para correr este proyecto en tu máquina local, necesitarás tener instalado Node.js y MongoDB.
 
@@ -66,30 +69,33 @@ Sigue estos pasos:
 
 Clona el repositorio:
 
-bash
+```bash
 git clone https://github.com/tu-usuario/tu-repositorio.git
 cd tu-repositorio
 (Reemplaza tu-usuario/tu-repositorio con la URL real de tu repositorio en GitHub)
-
+```
 Configura las variables de entorno: En la carpeta Backend, crea un archivo .env y añade tu cadena de conexión a MongoDB y una clave secreta para JWT:
 
-plaintext
+```bash
 MONGO_URI=mongodb+srv://<user>:<password>@cluster...
 JWT_SECRET=miclavesecreta123
+```
 Instala las dependencias y ejecuta el Backend: Abre una terminal y ejecuta:
 
-bash
+```bash
 cd Backend
 npm install
 npm start
+```
 El servidor del backend correrá en http://localhost:5000.
 
 Instala las dependencias y ejecuta el Frontend: Abre una segunda terminal y ejecuta:
 
-bash
+```bash
 cd Frontend
 npm install
 npm run dev
+```
 La aplicación de React estará disponible en http://localhost:5173 (o el puerto que indique Vite).
 
 🌐 Listado de Endpoints (API)
@@ -110,16 +116,17 @@ POST /: Crea una nueva categoría. (Ruta Protegida)
 DELETE /:id: Elimina una categoría. (Ruta Protegida)
 📦 Ejemplos de Datos (JSON)
 Crear un Usuario (POST /api/users/register)
-json
+```json
 {
     "name": "Facundo",
     "email": "facu@correo.com",
     "password": "password123"
 }
+```
 Crear un Producto (POST /api/products)
 Recuerda enviar el token en el header Authorization: Bearer <token>.
 
-json
+```json
 {
     "name": "Pez Guppy",
     "description": "Pez vivíparo, pequeño y muy fácil de cuidar.",
@@ -127,11 +134,13 @@ json
     "stock": 50,
     "category": "60d5f2f9a3b3c2a4e8f0b1a2"
 }
+```
 Crear una Categoría (POST /api/categories)
 Recuerda enviar el token en el header Authorization: Bearer <token>.
 
-json
+```json
 {
     "name": "Peces de Agua Fría",
     "description": "Peces que no requieren calentador en el acuario."
 }
+```
