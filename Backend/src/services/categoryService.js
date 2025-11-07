@@ -10,14 +10,19 @@ const getAllCategories = async () => {
     return await Category.find();
 };
 
+// --- ¡NUEVA FUNCIÓN! ---
+const updateCategoryById = async (id, updateData) => {
+    // Busca por ID y actualiza. { new: true } devuelve el documento actualizado.
+    return await Category.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+};
+
 const deleteCategoryById = async (id) => {
-    // Aquí podríamos añadir lógica para ver si algún producto usa esta categoría antes de borrarla.
-    // Por ahora, la eliminamos directamente.
     return await Category.findByIdAndDelete(id);
 };
 
 export const categoryService = {
     createCategory,
     getAllCategories,
+    updateCategoryById, // La exportamos para que el controlador la pueda usar
     deleteCategoryById,
 };

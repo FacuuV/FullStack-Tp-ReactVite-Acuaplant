@@ -44,7 +44,7 @@ const products = [
 ];
 
 const ProductCard = ({ product }) => {
-	// 2. Obtenemos la función para añadir al carrito
+
 	const { addToCart } = useCart();
 
 	return (
@@ -71,7 +71,7 @@ const ProductCard = ({ product }) => {
 						${product.price.toLocaleString('es-AR')}
 						{product.oldPrice && <span>${product.oldPrice.toLocaleString('es-AR')}</span>}
 					</p>
-					{/* 3. Convertimos el span en un botón que llama a addToCart */}
+					
 					<button onClick={() => addToCart(product)} className='add-cart'><i className='fa-solid fa-basket-shopping'></i></button>
 				</div>
 			</div>
