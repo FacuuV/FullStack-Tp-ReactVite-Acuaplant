@@ -15,32 +15,26 @@ import LoginSection from './components/LoginSection/LoginSection.jsx';
 import ContactSection from './components/ContactSection/ContactSection.jsx';
 
 function App() {
-  // 2. Creamos un estado para saber si el usuario está logueado
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // 3. Usamos useEffect para comprobar si hay un token al cargar la página
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
     }
   }, []);
-
-  // 4. Función para manejar el cierre de sesión
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Borramos el token
-    setIsLoggedIn(false); // Actualizamos el estado
-    window.location.reload(); // Recargamos la página para una experiencia limpia
+    localStorage.removeItem('token'); 
+    setIsLoggedIn(false); 
+    window.location.reload();
   };
 
-  // Función para manejar el login exitoso (la llamaremos desde LoginSection)
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
   };
 
   return (
     <div className="App">
-      {/* Pasamos la función de logout al Header para usarla allí si queremos */}
+      {}
       <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <main className="main-content">
         <Banner />
@@ -50,10 +44,7 @@ function App() {
         <Gallery />
         <AccessoriesSection />
         <BlogSection />
-
-        {/* --- 5. ¡AQUÍ ESTÁ LA MAGIA DEL RENDERIZADO CONDICIONAL! --- */}
         {isLoggedIn ? (
-          // Si el usuario SÍ ha iniciado sesión, muestra esto:
           <>
             <AddProductSection />
             <div className="logout-container">
@@ -63,9 +54,9 @@ function App() {
             </div>
           </>
         ) : (
-          // Si el usuario NO ha iniciado sesión, muestra esto:
+  
           <>
-            {/* Pasamos la función handleLoginSuccess a LoginSection */}
+            
             <RegisterSection />
             <LoginSection onLoginSuccess={handleLoginSuccess} />
           </>

@@ -75,7 +75,6 @@
   background-color: #16a085;
 }
 
-/* --- ESTILOS PARA EL NUEVO BOTÓN DE ELIMINAR --- */
 .remove-item-button {
   background: none;
   border: none;
@@ -87,5 +86,5 @@
 }
 
 .remove-item-button:hover {
-  color: #e74c3c; /* Rojo al pasar el ratón */
+  color: #e74c3c; 
 }

@@ -1,11 +1,9 @@
-// Frontend/src/components/ProductsSection/ProductsSection.jsx
 import React, { useState, useEffect } from 'react';
 import './ProductsSection.css';
-import { useCart } from '../../context/CartContext'; // 1. Importamos el hook del carrito
+import { useCart } from '../../context/CartContext'; 
 
-// El componente de la tarjeta de producto ahora usa el carrito
 const ProductCard = ({ product }) => {
-    const { addToCart } = useCart(); // 2. Obtenemos la función para añadir al carrito
+    const { addToCart } = useCart(); 
 
     return (
         <div className='card-product'>
@@ -30,7 +28,6 @@ const ProductCard = ({ product }) => {
                     <p className='price'>
                         ${product.price.toLocaleString('es-AR')}
                     </p>
-                    {/* 3. Al hacer clic, llamamos a la función addToCart con el producto */}
                     <button onClick={() => addToCart(product)} className='add-cart'>
                         <i className='fa-solid fa-basket-shopping'></i>
                     </button>
@@ -40,7 +37,6 @@ const ProductCard = ({ product }) => {
     );
 };
 
-// El resto del componente no necesita grandes cambios
 const ProductsSection = ({ refreshTrigger }) => {
     const [products, setProducts] = useState([]);
     const [loadingMessage, setLoadingMessage] = useState('Cargando productos...');

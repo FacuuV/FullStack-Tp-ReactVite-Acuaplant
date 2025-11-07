@@ -1,34 +1,29 @@
 import { useState, useEffect } from 'react';
-import './AddProductSection.css'; // Crearemos este archivo en el siguiente paso
+import './AddProductSection.css'; 
 
 function AddProductSection() {
-  // Estados para los campos del producto
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [stock, setStock] = useState('');
-  const [category, setCategory] = useState(''); // ID de la categoría seleccionada
+  const [category, setCategory] = useState('');
 
-  // Estado para las categorías que cargaremos del backend
   const [categories, setCategories] = useState([]);
 
-  // Estado para manejar los mensajes al usuario
   const [message, setMessage] = useState('');
 
-  // Efecto para cargar las categorías cuando el componente se monta
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        // No necesitamos token para obtener categorías (asumimos que es una ruta pública)
         const response = await fetch('http://localhost:5000/api/categories'); 
         const data = await response.json();
 
         if (!response.ok) {
           throw new Error(data.message || 'Error al cargar categorías');
         }
-        setCategories(data.data); // Asumimos que el backend devuelve { success: true, data: [...] }
+        setCategories(data.data); 
         if (data.data.length > 0) {
-          setCategory(data.data[0]._id); // Selecciona la primera categoría por defecto
+          setCategory(data.data[0]._id); 
         }
       } catch (error) {
         console.error('Error al obtener categorías:', error);
@@ -37,13 +32,13 @@ function AddProductSection() {
     };
 
     fetchCategories();
-  }, []); // El array vacío asegura que se ejecute solo una vez al montar
+  }, []); 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage('');
 
-    // 1. Obtener el token del localStorage
+    
     const token = localStorage.getItem('token');
     if (!token) {
       setMessage('Error: Debes iniciar sesión para añadir productos.');
@@ -55,7 +50,7 @@ function AddProductSection() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // 2. ¡Enviamos el token aquí!
+          'Authorization': `Bearer ${token}`, 
         },
         body: JSON.stringify({ name, description, price, stock, category }),
       });
@@ -69,12 +64,11 @@ function AddProductSection() {
       setMessage(`¡Éxito! Producto "${data.data.name}" añadido correctamente.`);
       console.log('Producto añadido:', data.data);
       
-      // Limpiar el formulario
       setName('');
       setDescription('');
       setPrice('');
       setStock('');
-      // setCategory(categories.length > 0 ? categories[0]._id : ''); // Restablecer a la primera o vacío
+      
 
     } catch (error) {
       setMessage(`Error: ${error.message}`);
