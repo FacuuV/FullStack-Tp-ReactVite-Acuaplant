@@ -9,6 +9,7 @@ import AccessoriesSection from './components/AccessoriesSection/AccessoriesSecti
 import BlogSection from './components/BlogSection/BlogSection.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import RegisterSection from './components/RegisterSection/RegisterSection.jsx';
+import LoginSection from './components/LoginSection/LoginSection.jsx';
 import ContactSection from './components/ContactSection/ContactSection.jsx';
 
 
@@ -28,6 +29,7 @@ function App() {
         <AccessoriesSection />
         <BlogSection />
         <RegisterSection />
+        <LoginSection />
         <ContactSection />
       </main>
       <Footer />
