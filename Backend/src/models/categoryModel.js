@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
 const categorySchema = new mongoose.Schema({
-    nombre: {
+    name: {
         type: String,
         required: [true, 'El nombre de la categoría es obligatorio.'],
         trim: true,
         unique: true
     },
-    descripcion: {
+    description: {
         type: String,
         required: false,
         trim: true

@@ -12,7 +12,8 @@ const registerUser = async (req, res) => {
         });
     } catch (error) {
         // Manejo de errores (ej.gmail duplicado)
-        res.status(400).json({ message: 'Error al registrar el usuario', error: error.message });
+        // Ahora enviamos el mensaje de error real que viene de Mongoose
+        res.status(400).json({ message: error.message });
     }
 };
 

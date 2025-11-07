@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import './LoginSection.css'; // Crearemos este archivo ahora
+import './LoginSection.css';
 
-function LoginSection() {
+function LoginSection({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -22,14 +22,17 @@ function LoginSection() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Credenciales incorrectas');
+        throw new Error(data.error || 'Credenciales incorrectas');
       }
 
-      // ¡Éxito! Guardamos el token en el navegador
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('token', data.data.token);
 
       setMessage(`¡Bienvenido de nuevo! Login exitoso.`);
-      console.log('Token recibido:', data.token);
+      console.log('Token recibido:', data.data.token);
+      
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      }
 
       setEmail('');
       setPassword('');

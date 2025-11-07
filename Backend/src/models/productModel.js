@@ -1,17 +1,17 @@
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
-    nombre: {
+    name: {
         type: String,
         required: [true, 'El nombre del producto es obligatorio.'],
         trim: true
     },
-    descripcion: {
+    description: {
         type: String,
         required: [true, 'La descripción es obligatoria.'],
         trim: true
     },
-    precio: {
+    price: {
         type: Number,
         required: [true, 'El precio es obligatorio.'],
         min: [0, 'El precio no puede ser negativo.']
@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
         min: [0, 'El stock no puede ser negativo.']
     },
     
-    categoria: {
+    category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category', 
         required: [true, 'La categoría es obligatoria.']
