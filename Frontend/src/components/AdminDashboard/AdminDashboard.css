@@ -66,3 +66,83 @@
   background-color: #e74c3c;
   color: white;
 }
+
+/* --- Estilos para el Gestor de Categorías --- */
+.category-manager {
+  margin-top: 50px;
+}
+
+.category-manager h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.category-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.category-create-form, .category-list-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.category-create-form h3, .category-list-container h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.category-create-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.category-create-form input, .category-create-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.category-create-form button {
+  padding: 12px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 5px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.delete-button-small {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.delete-button-small:hover {
+  color: #e74c3c;
+}

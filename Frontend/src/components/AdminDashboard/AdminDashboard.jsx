@@ -1,62 +1,123 @@
-// Frontend/src/components/AdminDashboard/AdminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import './AdminDashboard.css';
-import EditProductModal from '../EditProductModal/EditProductModal'; // 1. Importamos el modal
+import EditProductModal from '../EditProductModal/EditProductModal';
 
 const AdminDashboard = ({ refreshTrigger, onProductsChange }) => {
   const [products, setProducts] = useState([]);
-  const [message, setMessage] = useState('Cargando productos...');
+  const [categories, setCategories] = useState([]);
+  const [message, setMessage] = useState('Cargando datos...');
   
-  // 2. Estados para manejar el modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryDescription, setNewCategoryDescription] = useState('');
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      // ... (esta función no cambia)
-      setMessage('Cargando productos...');
+    const fetchData = async () => {
+      setMessage('Cargando...');
       try {
-        const response = await fetch('http://localhost:5000/api/products');
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message || 'Error al cargar los productos');
-        setProducts(data.data);
-        if (data.data.length === 0) setMessage('No hay productos en la base de datos.');
+        const [productsRes, categoriesRes] = await Promise.all([
+          fetch('http://localhost:5000/api/products'),
+          fetch('http://localhost:5000/api/categories')
+        ]);
+
+        const productsData = await productsRes.json();
+        const categoriesData = await categoriesRes.json();
+
+        if (!productsRes.ok) throw new Error(productsData.message || 'Error al cargar productos');
+        if (!categoriesRes.ok) throw new Error(categoriesData.message || 'Error al cargar categorías');
+        
+        setProducts(productsData.data);
+        setCategories(categoriesData.data);
+
+        if (productsData.data.length === 0 && categoriesData.data.length === 0) {
+          setMessage('No hay productos ni categorías en la base de datos.');
+        } else {
+          setMessage('');
+        }
+
       } catch (error) {
         setMessage(`Error: ${error.message}`);
-        console.error('Error fetching products:', error);
+        console.error('Error fetching data:', error);
       }
     };
-    fetchProducts();
+
+    fetchData();
   }, [refreshTrigger]);
 
   const handleDeleteProduct = async (productId) => {
-    // ... (esta función no cambia)
     if (!window.confirm('¿Estás seguro de que quieres eliminar este producto?')) return;
     const token = localStorage.getItem('token');
     try {
+
       const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || 'Error al eliminar');
+        throw new Error(data.message || 'Error al eliminar el producto');
       }
-      alert('Producto eliminado');
+      alert('Producto eliminado con éxito');
       if (onProductsChange) onProductsChange();
     } catch (error) {
       alert(`Error: ${error.message}`);
     }
   };
 
-  // 3. Función para abrir el modal con el producto correcto
   const handleEditClick = (product) => {
     setEditingProduct(product);
     setIsModalOpen(true);
   };
 
+  const handleCreateCategory = async (event) => {
+    event.preventDefault();
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch('http://localhost:5000/api/categories', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ name: newCategoryName, description: newCategoryDescription })
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Error al crear la categoría');
+      }
+      alert('Categoría creada con éxito');
+      setNewCategoryName('');
+      setNewCategoryDescription('');
+      if (onProductsChange) onProductsChange();
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId) => {
+    if (!window.confirm('¿Seguro que quieres eliminar esta categoría?')) return;
+    const token = localStorage.getItem('token');
+    try {
+
+      const response = await fetch(`http://localhost:5000/api/categories/${categoryId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Error al eliminar la categoría');
+      }
+      alert('Categoría eliminada con éxito');
+      if (onProductsChange) onProductsChange();
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
+  };
+
   return (
-    <> {/* Usamos un fragmento para poder renderizar el modal fuera de la sección */}
+    <>
       <section className="admin-dashboard">
         <h2>Panel de Administración de Productos</h2>
         <div className="product-list-container">
@@ -66,7 +127,6 @@ const AdminDashboard = ({ refreshTrigger, onProductsChange }) => {
                 <li key={product._id} className="product-item">
                   <span className="product-name">{product.name}</span>
                   <div className="product-actions">
-                    {/* 4. El botón Editar ahora abre el modal */}
                     <button onClick={() => handleEditClick(product)} className="edit-button">Editar</button>
                     <button onClick={() => handleDeleteProduct(product._id)} className="delete-button">Eliminar</button>
                   </div>
@@ -77,9 +137,49 @@ const AdminDashboard = ({ refreshTrigger, onProductsChange }) => {
             <p>{message}</p>
           )}
         </div>
+
+        <div className="category-manager">
+          <h2>Gestor de Categorías</h2>
+          <div className="category-content">
+            <div className="category-create-form">
+              <h3>Crear Nueva Categoría</h3>
+              <form onSubmit={handleCreateCategory}>
+                <input 
+                  type="text" 
+                  placeholder="Nombre de la categoría" 
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  required 
+                />
+                <textarea 
+                  placeholder="Descripción (opcional)"
+                  value={newCategoryDescription}
+                  onChange={(e) => setNewCategoryDescription(e.target.value)}
+                ></textarea>
+                <button type="submit">Crear Categoría</button>
+              </form>
+            </div>
+            <div className="category-list-container">
+              <h3>Categorías Existentes</h3>
+              {categories.length > 0 ? (
+                <ul className="category-list">
+                  {categories.map(cat => (
+                    <li key={cat._id} className="category-item">
+                      <span>{cat.name}</span>
+                      <button onClick={() => handleDeleteCategory(cat._id)} className="delete-button-small">
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No hay categorías.</p>
+              )}
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* 5. Renderizado condicional del modal */}
       {isModalOpen && (
         <EditProductModal 
           product={editingProduct}
