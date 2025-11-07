@@ -8,12 +8,12 @@ const createProduct = async (productData) => {
 
 // READ
 const getAllProducts = async () => {
-    return await Product.find().populate('categoria');
+    return await Product.find().populate('category');
 };
 
 // READ
 const getProductById = async (id) => {
-    return await Product.findById(id).populate('categoria');
+    return await Product.findById(id).populate('category');
 };
 
 // UPDATE
