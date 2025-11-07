@@ -8,6 +8,7 @@ import Gallery from './components/Gallery/Gallery.jsx';
 import AccessoriesSection from './components/AccessoriesSection/AccessoriesSection.jsx';
 import BlogSection from './components/BlogSection/BlogSection.jsx';
 import Footer from './components/Footer/Footer.jsx';
+import RegisterSection from './components/RegisterSection/RegisterSection.jsx';
 import ContactSection from './components/ContactSection/ContactSection.jsx';
 
 
@@ -26,6 +27,7 @@ function App() {
         <Gallery />
         <AccessoriesSection />
         <BlogSection />
+        <RegisterSection />
         <ContactSection />
       </main>
       <Footer />
